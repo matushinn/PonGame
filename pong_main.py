@@ -1,54 +1,86 @@
-# -*- coding: utf-8 -*
-
 from kivy.app import App
-from kivy.factory import Factory
-# kvファイルを画面ごとに分離してバラで読み込む
-from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
-
-# 日本語フォント表示対応
-# resource_add_path('{}\\{}'.format(os.environ['SYSTEMROOT'], 'Fonts'))
-# LabelBase.register(DEFAULT_FONT, 'MSGOTHIC.ttc')
-
-Builder.load_file('window1.kv')
-Builder.load_file('window2.kv')
-Builder.load_file('window3.kv')
+from kivy.uix.widget import Widget
+from kivy.properties \
+import NumericProperty, ReferenceListProperty,\
+    ObjectProperty
+from kivy.vector import Vector
+from kivy.clock import Clock
 
 
-class MainRoot(BoxLayout):
-    window1 = None
-    window2 = None
-    window3 = None
-
-    def __init__(self, **kwargs):
-        # 起動時に各画面を作成して使い回す
-        self.window1 = Factory.Window1()
-        self.window2 = Factory.window2()
-        self.window3 = Factory.Window3()
-
-        super(MainRoot, self).__init__(**kwargs)
-
-    # 一番目の画面遷移
-    def change_disp(self):
-        self.clear_widgets()
-        self.add_widget(self.window1)
-
-    # 二番目の画面遷移
-    def change_disp1(self):
-         self.clear_widgets()
-         self.add_widget(self.window2)
-
-    # 三番目の画面遷移
-    def change_disp2(self):
-         self.clear_widgets()
-         self.add_widget(self.window3)
+class PongPaddle(Widget):
+    score = NumericProperty(0)
 
 
-class MainApp(App):
-    def __init__(self, **kwargs):
-        super(MainApp, self).__init__(**kwargs)
-        self.title = 'PongPongPong Game'
+    # ボールの跳ね返り方のメソッド
+    def bounce_ball(self, ball):
+        if self.collide_widget(ball):
+            vx, vy = ball.velocity
+            offset = (ball.center_y - self.center_y) / (self.height / 2)
+            bounced = Vector(-1 * vx, vy)
+            vel = bounced * 1.1
+            ball.velocity = vel.x, vel.y + offset
 
 
-if __name__ == "__main__":
-    MainApp().run()
+class PongBall(Widget):
+    velocity_x = NumericProperty(0)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+
+    def move(self):
+        self.pos = Vector(*self.velocity) + self.pos
+
+
+class PongGame(Widget):
+    ball = ObjectProperty(None)
+    player1 = ObjectProperty(None)
+    player2 = ObjectProperty(None)
+
+    # サーブ
+    def serve_ball(self, vel=(4, 0)):
+        self.ball.center = self.center
+        self.ball.velocity = vel
+
+    def update(self, dt):
+        self.ball.move()
+
+        # ボール跳ね返る
+        self.player1.bounce_ball(self.ball)
+        self.player2.bounce_ball(self.ball)
+
+        # ボールの跳ね返り方
+        if (self.ball.y < self.y) or (self.ball.top > self.top):
+            self.ball.velocity_y *= -1.0
+
+        # スコア
+        if self.ball.x < self.x:
+            self.player2.score += 1
+            self.serve_ball(vel=(4, 0))
+        if self.ball.x > self.width:
+            self.player1.score += 1
+            self.serve_ball(vel=(-4, 0))
+
+        # if self.player1.score == 2:
+        #     self.player1.
+        #
+        # if self.player2.score == 2:
+        #     self.player2.score = "Winner"
+
+    # ボールタッチした時のメソッド
+    def on_touch_move(self, touch):
+        if touch.x < self.width / 3:
+            self.player1.center_y = touch.y
+        if touch.x > self.width - self.width / 3:
+            self.player2.center_y = touch.y
+
+
+class PongApp(App):
+    def build(self):
+        game = PongGame()
+        game.serve_ball()
+        Clock.schedule_interval(game.update, 1.0 / 60.0)
+        return game
+
+
+if __name__ == '__main__':
+    PongApp().run()
+
