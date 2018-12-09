@@ -1,13 +1,13 @@
-
 <PongBall>:
     size: 50, 50
     canvas:
         Ellipse:
             pos: self.pos
             size: self.size
+    color: 0,0,1,1
 
 <PongPaddle>:
-    size: 25, 200
+    size: 25, 100
     canvas:
         Rectangle:
             pos:self.pos
@@ -23,25 +23,40 @@
             pos: self.center_x-5, 0
             size: 10, self.height
 
-
-
-
     Label:
-        font_size: 70
+        font_size: 700
         center_x: root.width / 4
-        top: root.top - 50
+        top: root.top - 500
         text: str(root.player1.score)
         #紫
-        color: 1,0,1,1
+        color: 0,0,1,1
 
 
     Label:
-        font_size: 70
+        font_size: 700
+        center_x: root.width * 3 / 4
+        top: root.top - 500
+        text: str(root.player2.score)
+        #赤
+        color:1, 0, 0, 1
+
+    # player1 label
+    Label:
+        font_size: 100
         center_x: root.width * 3 / 4
         top: root.top - 50
-        text: str(root.player2.score)
-        #黄緑
-        color: 0,1,0,1
+        text: 'Player 1'
+        #赤
+        color:1, 0, 0, 1
+
+     # player2 label
+    Label:
+        font_size: 100
+        center_x: root.width / 4
+        top: root.top - 50
+        text: 'Player 2'
+        #青
+        color: 0,0,1,1
 
     PongBall:
         id: pong_ball
