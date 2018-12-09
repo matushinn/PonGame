@@ -1,3 +1,5 @@
+
+
 <PongBall>:
     size: 50, 50
     canvas:
@@ -8,6 +10,26 @@
         Color:
         #黄色
             rgba: 1,1,0,1
+
+<Result>:
+    size: 200,200
+    canvas:
+        Ellipse:
+            pos: self.pos
+            size: self.size
+    canvas.before:
+        Color:
+        #黄色
+            rgba: 1,1,0,1
+
+    canvas.before:
+        Color:
+            rgba: 0, 1, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
 
 
 <PongPaddle>:
@@ -48,8 +70,8 @@
         center_x: root.width * 3 / 4
         top: root.top - 500
         text: str(root.player2.score)
-        #赤
-        color:1, 0, 0, 1
+        color: 1,0,0,1
+
 
     # player1 label
     Label:
@@ -73,7 +95,7 @@
         font_size: 200
         center_x: root.width / 2
         top: root.top - 1000
-        text: 'PINPON PINPON'
+        text: 'PON STADIUM'
         #青
         color: 1,1,0,1
 

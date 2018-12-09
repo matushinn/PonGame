@@ -6,6 +6,9 @@ from kivy.properties \
 from kivy.vector import Vector
 from kivy.clock import Clock
 
+class Result(Widget):
+    text = "Win"
+
 
 class PongPaddle(Widget):
     score = NumericProperty(0)
@@ -58,11 +61,11 @@ class PongGame(Widget):
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
 
-        # if self.player1.score == 2:
-        #     self.player1.
-        #
-        # if self.player2.score == 2:
-        #     self.player2.score = "Winner"
+        # 1点入ったら終了
+        if self.player1.score >= 3 or self.player2.score >= 3:
+            Clock.unschedule(self.update)
+            self.add_widget(Result())
+
 
     # ボールタッチした時のメソッド
     def on_touch_move(self, touch):
@@ -76,9 +79,11 @@ class PongApp(App):
     def build(self):
         game = PongGame()
         game.serve_ball()
+
         Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 
 
 if __name__ == '__main__':
     PongApp().run()
+
