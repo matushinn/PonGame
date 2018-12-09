@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties \
-import NumericProperty, ReferenceListProperty,\
+    import NumericProperty, ReferenceListProperty, \
     ObjectProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
@@ -9,7 +9,6 @@ from kivy.clock import Clock
 
 class PongPaddle(Widget):
     score = NumericProperty(0)
-
 
     # ボールの跳ね返り方のメソッド
     def bounce_ball(self, ball):
@@ -83,4 +82,3 @@ class PongApp(App):
 
 if __name__ == '__main__':
     PongApp().run()
-
