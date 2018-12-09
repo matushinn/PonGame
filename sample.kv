@@ -1,0 +1,32 @@
+<MenuWindow>:
+    canvas:
+        Color:
+            rgb: self.parent.bgcolor
+        Rectangle:
+            size: self.size
+
+    Label:
+        text: self.parent.parent.message
+        font_size: 40
+        pos_hint: {'x': 0, 'y': .2}
+
+    Button:
+        text: 'back'
+        size_hint: .1, .1
+        pos_hint: {'x': .45, 'y': .45}
+        on_release: self.parent.parent.clear_this()
+
+<Menu1>:
+    message: 'This is the window 1'
+    bgcolor: (.7, 0, 0)
+    MenuWindow:
+
+<Menu2>:
+    message: 'This is the window 2'
+    bgcolor: (0, .7, 0)
+    MenuWindow:
+
+<Menu3>:
+    message: 'This is the window 3'
+    bgcolor: (0, 0, .7)
+    MenuWindow:
